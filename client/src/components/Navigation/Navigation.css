@@ -1,0 +1,236 @@
+.navigation {
+    background: #2F2F2F;
+    color: #E9E9E9;
+    display: flex;
+    align-items: baseline;
+    position: fixed;
+    height: 8vh;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.35);
+    padding: 10px;
+}
+
+.navigation a {
+    text-decoration: none;
+    color: #E9E9E9;
+}
+
+.navigation a:hover {
+    text-decoration: none;
+    color: #E9E9E9;
+}
+
+.navigation-brand {
+    display: none;
+    padding: 0 0.5em;
+}
+
+.navigation-brand a {
+    font-family: Calligraffitti, Helvetica;
+    margin-bottom: 0;
+}
+
+.navigation-menu {
+    background: #2F2F2F;    
+}
+
+.navigation-list {
+    list-style: none;
+    display: none;
+    grid-template-rows: repeat(auto-fill, minmax(150px, 1fr));
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    text-align: left;
+    position: fixed;
+    top:8vh;
+    height: 92vh;
+    background: #2F2F2F;
+    right: 0;
+}
+
+.navigation-list > * {
+    padding: 0 1.5em;
+}
+
+.navigation-list > * {
+    cursor: pointer;
+}
+
+.navigation-list img {
+    max-width: 32px;
+    max-height: 32px;
+    margin-right: 1em;
+}
+
+.navigation-menu-btn {
+    transform: translateY(0.5em);
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.navigation .icon {
+    fill: currentColor;
+}
+
+.navigation-search {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.navigation-search input[type=text] {
+    margin-top: 0.5em;
+    padding: 1em 0.5em;
+    border-radius: 0.2em 0 0 0.2em;
+    border: none;
+    max-width: 200px;
+}
+
+.submit-btn {
+    padding: 1em;
+    cursor: pointer;
+    border-radius: 0 0.4em 0.4em 0;
+    border: none;
+}
+
+.active {
+    display: grid;
+}
+
+.subreddit-name {
+    margin: 0 auto;
+}
+
+.subreddit-name > * {
+    margin-bottom: 0;
+    font-family: 'Roboto Condensed';
+}
+
+.subreddit-search {
+    margin-right: auto;
+}
+
+.username {
+    display: flex;
+    align-items: center;
+    align-self: flex-end;
+    margin-bottom: 1em;
+    grid-row: -2/span 1;
+    cursor: pointer;
+}
+
+.username button {
+    background: none;
+    color: #E9E9E9;
+    border: none;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+}
+
+.username button:focus {
+    outline: none;
+}
+
+.username::after {
+    content: '▲';
+    padding-left: 0.5em;
+}
+
+.user-collection-menu {
+    position: static;
+    display: none;
+    bottom: 8vh;
+    left: 0;
+    background: #2F2F2F;
+    grid-row: -4/span 1;
+}
+
+.user-collection-menu.active {
+    display: grid;
+}
+
+.user-collection-menu li {
+    padding: 20px 0;
+}
+
+@media screen and (min-width:400px) {
+    .navigation-brand {
+        display: block;
+    }
+
+    .navigation-list {
+        grid-template-rows: repeat(auto-fill, minmax(50px, 1fr));
+    }
+
+    .navigation-search {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .navigation-search input[type=text] {
+        margin-left: 10px;
+    }
+
+    .search-box-container {
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (min-width:1200px) {
+    .navigation-list {
+        list-style: none;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 0;
+        margin-left: auto;
+        position: static;
+        top:0;
+        height: auto;
+        width: auto;
+        background: #2F2F2F;
+        right: 0;
+    }
+
+    .navigation-list > *:hover {
+        background-color: #2F2F2F !important;
+    }
+
+    .navigation-menu-btn {
+        display: none;
+    }
+
+    .username::after {
+        content: '▼';
+        padding-left: 0.5em;
+    }
+    
+    .user-collection-menu {
+        top: 8vh;
+        right: 0;
+        bottom: 0;
+        left: auto;
+        background-color: #2F2F2F;
+        position: absolute;
+        display: none;
+    }
+
+    .user-collection-menu li {
+        padding: 20px;
+        background-color: #2F2F2F;
+    }
+
+    .user-collection-menu li:hover {
+        padding: 20px;
+        background-color: #121212;
+    }
+}
+
