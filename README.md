@@ -15,6 +15,7 @@ Used to learn how to handle OAuth2, APIs and React Hooks.
 2. [React's hooks documentation](https://reactjs.org/docs/hooks-reference.html)
 3. [Reddit API Documentation](https://www.reddit.com/dev/api/)
 4. [Aborting axios requests](https://github.com/axios/axios/blob/master/README.md#cancellation)
+5. [Hacky way to redirect users from the client side, based on server-side process.env variables](https://stackoverflow.com/questions/49835830/res-redirect-cors-not-working-in-mean-app)
 
 ### To add
 - Able to view image albums

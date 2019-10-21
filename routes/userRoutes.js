@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();
 const useToken = require('../middleware/useToken');
 const axios = require('axios');
+const uuidv4 = require('uuid/v4');
+const cors = require('cors')
+
+// login
+router.get('/login', cors() ,async (req, res) => {
+    const random_string = uuidv4();
+    console.log(process.env.CLIENT_ID, random_string, process.env.URI);
+    const url = `https://www.reddit.com/api/v1/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&state=${random_string}&redirect_uri=${process.env.URI}&duration=permanent&scope=identity history vote read save`;
+    // return res.status(302).redirect(`https://www.reddit.com/api/v1/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&state=${random_string}&redirect_uri=${process.env.URI}&duration=permanent&scope=identity history vote read save`);
+    return res.json({url});
+})
 
 // get access token
 router.post('/access_token/:code', async (req, res) => {

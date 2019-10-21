@@ -7,10 +7,22 @@ import PostItem from '../PostItem/PostItem';
 import MasonryLayout from '../MasonryLayout';
 import axios from 'axios';
 import './FrontPage.css';
-import { API_URL } from '../API_URL';
 import uuidv4 from 'uuid/v4';
 
-const loginError = <a href={API_URL}><b>Log in</b> to continue</a>
+const loginError = <button className="link" onClick={
+    async () => {
+        try {
+            const {data} = await axios.get('/user/login');
+            const {url} = data;
+
+            window.location = url;
+        } catch(e) {
+            const {status, error} = e.response.data;
+            console.log(`Unable to log user out, ${status}: ${error}`);
+        }
+        
+    }
+}><b>Log in</b> to continue</button>
 
 function FrontPage(props) {
     const defaultColumnWidth = 250;

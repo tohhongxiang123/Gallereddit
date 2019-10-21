@@ -6,7 +6,6 @@ import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import MenuLogo from '../../assets/menu.svg';
 import CloseLogo from '../../assets/close.svg';
-import { API_URL } from '../API_URL';
 
 function Navigation(props) {
     const [user, setUser] = useContext(UserContext);
@@ -71,6 +70,19 @@ function Navigation(props) {
         document.querySelector('.user-collection-menu').classList.toggle('active');
     }
 
+    const redirectToUrl = async () => {
+        try {
+            const {data} = await axios.get('/user/login');
+            const {url} = data;
+
+            window.location = url;
+        } catch(e) {
+            const {status, error} = e.response.data;
+            console.log(`Unable to log user out, ${status}: ${error}`);
+        }
+        
+    }
+
     return (
             <nav className="navigation">
                 <h2 className="navigation-brand"><Link to="/">Gallereddit</Link></h2>
@@ -93,7 +105,7 @@ function Navigation(props) {
                         </form>
                     </li> 
                     {!user ?
-                    <a href={API_URL}>
+                    <a onClick={redirectToUrl}>
                         <li>
                             Login
                         </li>
