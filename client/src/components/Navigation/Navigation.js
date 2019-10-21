@@ -16,7 +16,6 @@ function Navigation(props) {
     useEffect(() => {
         axios.get('/user/info').then(response => {
             const data = response.data;
-            console.log(data);
             setUser(data);
         }).catch(e => {
             const {status, error} = e.response.data;
@@ -51,7 +50,6 @@ function Navigation(props) {
     }
 
     const toggleMenu = (e) => {
-        console.log('show the menu');
         const nav_list = document.querySelector('.navigation-list');
         const menu_icon_element = document.querySelector('.menu-icon');
 

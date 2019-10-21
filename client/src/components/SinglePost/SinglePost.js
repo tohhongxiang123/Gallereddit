@@ -28,7 +28,6 @@ function SinglePost({data, ...props}) {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
             setTitle(data.title);
             const image_info = data.preview.images[0];
 
