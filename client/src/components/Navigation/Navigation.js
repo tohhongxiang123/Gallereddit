@@ -103,11 +103,11 @@ function Navigation(props) {
                         </form>
                     </li> 
                     {!user ?
-                    <a onClick={redirectToUrl}>
+                    <button className="link login-btn" onClick={redirectToUrl}>
                         <li>
                             Login
                         </li>
-                    </a>
+                    </button>
                     :
                     <>
                         <li className='username' onClick={toggleUserCollectionMenu}><button><img src={user.icon_img} alt="User Profile Icon"/>{user.name}</button></li>
