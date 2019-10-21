@@ -31,3 +31,15 @@
 .text-center {
     text-align: center;
 }
+
+.link {
+    background: none;
+    color: inherit;
+    border: none;
+    font-size: inherit;
+    cursor: pointer;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

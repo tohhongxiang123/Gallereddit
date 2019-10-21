@@ -1,1 +1,0 @@
-export const API_URL = "https://www.reddit.com/api/v1/authorize?client_id=7cdgoun07tSY2A&response_type=code&state=RANDOM_STRING&redirect_uri=http://localhost:3000/login&duration=permanent&scope=identity history vote read save"

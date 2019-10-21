@@ -30,8 +30,7 @@ function Login(props) {
 
         getAccessToken(code);
     }, [code, setUser]);
-    
-    
+
     return (
         <Redirect to={'/'} />
     )
