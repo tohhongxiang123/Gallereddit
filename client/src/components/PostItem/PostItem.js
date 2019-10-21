@@ -32,7 +32,7 @@ export default function PostItem(props) {
 
     return (
         <div className="post-container" onClick={props.handleClick} data-index={props.name}>
-            {props.preview ?  <img src={low_res_image_src} alt={props.title}/> : <p>Loading...</p>}
+            {props.preview ?  <img src={low_res_image_src} alt={props.title} className="post-container-image"/> : <p>Loading...</p>}
             {props.likes ? <img src={upArrow} className="upvoted" width="32px" height="32px"/> : null}
         </div>
     )

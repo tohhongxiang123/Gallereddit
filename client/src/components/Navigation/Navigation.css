@@ -92,6 +92,10 @@
     max-width: 200px;
 }
 
+.login-btn {
+    text-align: left;
+}
+
 .submit-btn {
     padding: 1em;
     cursor: pointer;
