@@ -88,7 +88,6 @@ function FrontPage(props) {
 
     // abort fetch requests halfway through
     const cancelActions = useCallback((source) => {
-        console.log('CANCEL ACTIONS')
         source.cancel('Cancelling fetch request');
         setAfter('');
         setPosts([]);
@@ -97,8 +96,7 @@ function FrontPage(props) {
     // enable application-only oauth
     useEffect(() => {
         const fetchInitialAccessCode = async () => {
-            const {data} = await axios.get(`/init_code/${userId}`);
-            console.log(data);
+            await axios.get(`/init_code/${userId}`);
         }
 
         if (!user) {
@@ -191,9 +189,7 @@ function FrontPage(props) {
 
     // upvoting a post
     async function toggleUpvote(name) {
-        // const upvoted = currentPost.data.likes;
         const upvoted = posts.filter(post => post.data.name === name)[0].data.likes;
-        console.log(upvoted);
         try {
             if (!upvoted) {
                 await axios.get(`/post/upvote/${name}/1`); // upvote the post
