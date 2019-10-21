@@ -1,0 +1,28 @@
+.post-list-container {
+    margin-top: 8vh;
+}
+
+.more-posts-btn {
+    margin: 1em auto;
+    display: block;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.loading-text {
+    margin: 0 auto;
+}
+
+.error-text {
+    padding: 1em;
+    font-size: 24px;
+}
+
+.error-text a {
+    color: #121212;
+    text-decoration: none;
+}
+
+.error-text a:hover {
+    text-decoration: underline;
+}

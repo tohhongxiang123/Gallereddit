@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto|Calligraffitti|Roboto+Condensed&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', 'Helvetica', 'Arial';
+}
+
+.btn {
+    cursor: pointer;
+    padding: 1em;
+    transition: all 0.2s ease-in-out;
+    border: none;
+}
+
+.btn:hover {
+    background-color: #E0E0E0;
+    color: #2F2F2F;
+    transition: all 0.2s ease-out;
+}
+
+.btn-primary {
+    background-color: #EDB039;
+}
+
+.btn-primary:hover {
+    background-color: #EDB039;
+}
+
+.text-center {
+    text-align: center;
+}

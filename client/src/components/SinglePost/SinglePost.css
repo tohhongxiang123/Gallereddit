@@ -1,0 +1,110 @@
+.single-post-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.post-image {
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+}
+
+.post-image img {
+    max-height: 100vh;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.post-information {
+    position: fixed;
+    bottom: 0;
+    background: #fff;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(auto-fit, 1fr);
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    background: rgb(47,47,47);
+    background: linear-gradient(0deg, rgba(47,47,47,1) 0%, rgba(255,255,255,0) 100%);
+    color: #F0F0F0;
+}
+
+.post-information a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.post-actions-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    position: relative;
+}
+
+.post-actions {
+    display: none;
+    position:absolute;
+    bottom: 3em;
+    right: 0;
+    width: 100%;
+}
+
+.post-actions > * {
+    background-color: #2F2F2F80;
+}
+
+.post-information a:hover {
+    text-decoration: underline;
+}
+
+.post-title {
+    display: none;
+}
+
+.post-title, .post-subreddit {
+    max-width: 300px;
+    white-space: pre;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 0 1em;
+}
+
+.post-information ul {
+    list-style: none;
+}
+
+.close-btn {
+    justify-self: stretch;
+}
+
+@media screen and (min-width: 768px) {
+    .post-actions {
+        grid-auto-flow: column;
+        position: static;
+        display: grid;
+    }
+
+    .post-actions > * {
+        background-color: transparent;
+    }
+
+    .post-action-expand-btn {
+        display: none;
+    }
+
+    .post-actions-container {
+        grid-template-columns: auto auto;
+    }
+
+    .post-title {
+        display: block;
+    }
+}
