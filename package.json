@@ -1,0 +1,29 @@
+{
+  "name": "gallereddit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "server": "nodemon index",
+    "dev": "concurrently \"npm run server\" \"npm run start --prefix client\"",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "concurrently": "^4.1.2",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0",
+    "uuid": "^3.3.3"
+  },
+  "engines": {
+    "node": "10.16.0"
+}
+}
