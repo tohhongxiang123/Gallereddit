@@ -11,10 +11,12 @@ function SinglePost({data, ...props}) {
     useEffect(() => {
         function handleKeyPress(e) {
             const key = e.keyCode
+            // left arrow
             if (key === 37) {
                 props.previousPost();
             }
 
+            // right arrow
             if (key === 39) {
                 props.nextPost();
             }
@@ -47,7 +49,11 @@ function SinglePost({data, ...props}) {
 
             const downloadImage = new Image();
             downloadImage.onload = function() {
-                document.querySelector('.image-container').src = this.src;
+                try {
+                    document.querySelector('.image-container').src = this.src;
+                } catch(e) {
+                    console.log(e) //todo
+                }
             }
 
             downloadImage.src = image_src;
