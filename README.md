@@ -4,7 +4,7 @@ A small gallery Single Page Application (SPA) working with Reddit's API
 Used to learn how to handle OAuth2, APIs and React Hooks.
 
 ## Features
-1. Able to view all posts containing images pulled from reddit API
+1. Able to view all posts containing images pulled from reddit API (Hosted image albums are pulled from Imgur API as well)
 2. Able to restrict posts based on subreddit
 3. Able to login to reddit account (Uses reddit OAuth2)
 4. Once logged in, able to upvote and save posts to user account
@@ -16,6 +16,7 @@ Used to learn how to handle OAuth2, APIs and React Hooks.
 3. [Reddit API Documentation](https://www.reddit.com/dev/api/)
 4. [Aborting axios requests](https://github.com/axios/axios/blob/master/README.md#cancellation)
 5. [Hacky way to redirect users from the client side, based on server-side process.env variables](https://stackoverflow.com/questions/49835830/res-redirect-cors-not-working-in-mean-app)
+6. [Imgur API Docs](https://apidocs.imgur.com/?version=latest#intro)
 
 ### To add
 - Able to view image albums

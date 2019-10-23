@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import './SinglePost.css';
 import LoadingGif from '../../assets/loading.gif';
+import axios from 'axios'
+import Carousel from '../Carousel/Carousel'
 
 function SinglePost({data, ...props}) {
     //props.match.params.postName
     const [imageSource, setImageSource] = useState(null);
     const [isAlbum, setIsAlbum] = useState(false);
+    const [albumPics, setAlbumPics] = useState([]);
     const [title, setTitle] = useState(null);
 
     useEffect(() => {
@@ -36,41 +39,48 @@ function SinglePost({data, ...props}) {
 
             let image_src = image_info.source.url; // set default thumbnail as image source
 
-            // if image contains media embed, use media embed
-            if (!(Object.entries(data.media_embed).length === 0 && data.media_embed.constructor === Object)) {
+            // if post is album, use carousel
+            if (data.url.includes('imgur')) {
                 setIsAlbum(true);
-                console.log('is album')
-            }
+                const album_id = data.url.split('/')[data.url.split('/').length - 1];
 
-            // if image_info.variants is not empty and contains the property 'gif', use the highest quality gif as the source instead
-            if (!(Object.entries(image_info.variants).length === 0 && image_info.variants.constructor === Object)) {
-                if (image_info.variants.hasOwnProperty('gif')) {
-                    if (image_info.variants.gif.hasOwnProperty('source')) {
-                        image_src = image_info.variants.gif.source.url;
-                    } else {
-                        const resolution_array = image_info.variants.gif.resolutions;
-                        image_src = resolution_array[resolution_array.length - 1].url;
+                const fetchAlbum = async id => {
+                    console.log('requesting from singlepost', id);
+                    const {data} = await axios.get(`/image/${id}`);
+                    setAlbumPics(data.data.images);
+                }
+
+                fetchAlbum(album_id);
+            } else {
+                // if image_info.variants is not empty and contains the property 'gif', use the highest quality gif as the source instead
+                if (!(Object.entries(image_info.variants).length === 0 && image_info.variants.constructor === Object)) {
+                    if (image_info.variants.hasOwnProperty('gif')) {
+                        if (image_info.variants.gif.hasOwnProperty('source')) {
+                            image_src = image_info.variants.gif.source.url;
+                        } else {
+                            const resolution_array = image_info.variants.gif.resolutions;
+                            image_src = resolution_array[resolution_array.length - 1].url;
+                        }
+                    } 
+                }
+
+                const downloadImage = new Image();
+                downloadImage.onload = function() {
+                    try {
+                        document.querySelector('.image-container').src = this.src;
+                    } catch(e) {
+                        console.log(e) //todo
                     }
-                } 
-            }
+                }
 
-            const downloadImage = new Image();
-            downloadImage.onload = function() {
-                try {
-                    document.querySelector('.image-container').src = this.src;
-                } catch(e) {
-                    console.log(e) //todo
+                downloadImage.src = image_src;
+
+                setImageSource(image_src);
                 }
             }
-
-            downloadImage.src = image_src;
-
-            setImageSource(image_src);
-        }
-
         return () => {
             setImageSource(null);
-            document.querySelector('.image-container').src = LoadingGif;
+            setAlbumPics([])
         }
     }, [data]);
 
@@ -82,12 +92,14 @@ function SinglePost({data, ...props}) {
         <>
         {data ? (
             <div className={props.className}>
-                <div className="post-image" onClick={props.handleClick}>
-                    <a href={imageSource} target="_blank" rel="noopener noreferrer">
-                        {isAlbum ? <div className="image-container" dangerouslySetInnerHTML={{__html: data.media_embed.content}}></div> :
-                        <img src={LoadingGif} alt={data.imageSource} className="image-container"/>
-                        }
-                    </a>
+                <div className="post-image">
+                    {isAlbum ? 
+                    <Carousel>
+                        {albumPics.map(pic => <img src={`https://i.imgur.com/${pic.id}h.jpg`} key={pic.id} alt={`Album ${pic.description}`}/>)}
+                    </Carousel>
+                    :
+                    <img src={LoadingGif} alt={data.imageSource} className="image-container"/>
+                    }
                 </div>
                 <div className="post-information">
                     <div className="btn" onClick={props.previousPost}>{`<`}</div>

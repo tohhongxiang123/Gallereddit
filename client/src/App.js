@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import FrontPage from './components/FrontPage/FrontPage';
 import Navigation from './components/Navigation/Navigation';
-import Login from './components/Login'
+import Login from './components/Login';
 import {UserProvider} from './UserContext';
 import {SubredditProvider} from './SubredditContext';
 
@@ -13,6 +13,7 @@ function App() {
       <SubredditProvider>
           <Router>
             <Navigation />
+            <div className="content">
             <Switch>
               <Route path="/login">
                 <Login />
@@ -24,6 +25,7 @@ function App() {
                 <FrontPage type="post"/>
               </Route>
             </Switch>
+          </div>
           </Router>
       </SubredditProvider>
     </UserProvider>

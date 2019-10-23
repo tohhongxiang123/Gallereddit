@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
+const imageRoutes = require('./routes/imageRoutes');
 const axios = require('axios');
 const path = require('path');
 require('dotenv').config();
@@ -19,6 +20,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
+app.use('/image', imageRoutes);
 
 // used to enable application only oauth
 // https://github.com/reddit-archive/reddit/wiki/oauth2#application-only-oauth
