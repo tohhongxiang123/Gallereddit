@@ -6,6 +6,7 @@ import LoadingGif from '../../assets/loading.gif';
 function SinglePost({data, ...props}) {
     //props.match.params.postName
     const [imageSource, setImageSource] = useState(null);
+    const [isAlbum, setIsAlbum] = useState(false);
     const [title, setTitle] = useState(null);
 
     useEffect(() => {
@@ -34,6 +35,12 @@ function SinglePost({data, ...props}) {
             const image_info = data.preview.images[0];
 
             let image_src = image_info.source.url; // set default thumbnail as image source
+
+            // if image contains media embed, use media embed
+            if (!(Object.entries(data.media_embed).length === 0 && data.media_embed.constructor === Object)) {
+                setIsAlbum(true);
+                console.log('is album')
+            }
 
             // if image_info.variants is not empty and contains the property 'gif', use the highest quality gif as the source instead
             if (!(Object.entries(image_info.variants).length === 0 && image_info.variants.constructor === Object)) {
@@ -76,7 +83,11 @@ function SinglePost({data, ...props}) {
         {data ? (
             <div className={props.className}>
                 <div className="post-image" onClick={props.handleClick}>
-                    <a href={imageSource} target="_blank" rel="noopener noreferrer"><img src={LoadingGif} alt={data.imageSource} className="image-container"/></a>
+                    <a href={imageSource} target="_blank" rel="noopener noreferrer">
+                        {isAlbum ? <div className="image-container" dangerouslySetInnerHTML={{__html: data.media_embed.content}}></div> :
+                        <img src={LoadingGif} alt={data.imageSource} className="image-container"/>
+                        }
+                    </a>
                 </div>
                 <div className="post-information">
                     <div className="btn" onClick={props.previousPost}>{`<`}</div>

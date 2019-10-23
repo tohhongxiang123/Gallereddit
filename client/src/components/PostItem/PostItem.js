@@ -35,8 +35,8 @@ export default function PostItem(props) {
         <div className="post-container" onClick={props.handleClick} data-index={props.name}>
             {props.preview ?  <img src={low_res_image_src} alt={props.title} className="post-container-image"/> : <p>Loading...</p>}
             <div className="isLikedOrSaved">
-                {props.likes ? <img src={upArrow} className="upvoted" width="32px" height="32px"/> : null}
-                {props.saved ? <img src={star} className="star" width="32px" height="32px"/> : null}
+                {props.likes ? <img src={upArrow} className="upvoted" width="32px" height="32px" alt="upvoted"/> : null}
+                {props.saved ? <img src={star} className="star" width="32px" height="32px" alt="saved"/> : null}
             </div>
         </div>
     )
