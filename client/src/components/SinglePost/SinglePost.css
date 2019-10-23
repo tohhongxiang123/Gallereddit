@@ -25,7 +25,6 @@
 .post-information {
     position: fixed;
     bottom: 0;
-    background: #fff;
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: repeat(auto-fit, 1fr);
