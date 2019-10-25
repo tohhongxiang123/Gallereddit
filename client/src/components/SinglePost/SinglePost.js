@@ -12,6 +12,21 @@ function SinglePost({data, ...props}) {
     const [albumPics, setAlbumPics] = useState([]);
     const [title, setTitle] = useState(null);
 
+    function showImage(imageSrc) {
+        const downloadImage = new Image();
+        downloadImage.onload = function() {
+            try {
+                document.querySelector('.image-container').src = this.src;
+                // sometimes when the user clicks away, it closes the image container, then .image-container becomes null
+            } catch(e) {
+                console.log(e) //todo
+            }
+        }
+
+        downloadImage.src = imageSrc;
+        setImageSource(imageSrc);
+    }
+
     useEffect(() => {
         function handleKeyPress(e) {
             const key = e.keyCode
@@ -33,51 +48,59 @@ function SinglePost({data, ...props}) {
     }, [props]);
 
     useEffect(() => {
-        if (data) {
-            setTitle(data.title);
-            const image_info = data.preview.images[0];
+        if (!data) {
+            return () => {
+                setImageSource(null);
+                setAlbumPics([])
+            }
+        }
 
-            let image_src = image_info.source.url; // set default thumbnail as image source
+        setTitle(data.title);
+        const image_info = data.preview.images[0];
 
-            // if post is album, use carousel
-            if (data.url.includes('imgur')) {
-                setIsAlbum(true);
-                const album_id = data.url.split('/')[data.url.split('/').length - 1];
+        let image_src = image_info.source.url; // set default thumbnail as image source
 
-                const fetchAlbum = async id => {
-                    console.log('requesting from singlepost', id);
+        // if post is album, use carousel
+        // imgur albums follow the format https://i.imgur.com/a/asdfxcv
+        if (data.url.includes('imgur') && data.url.split('/')[data.url.split('/').length - 2] === 'a') {
+            setIsAlbum(true);
+            const album_id = data.url.split('/')[data.url.split('/').length - 1].split('.')[0]; 
+            // splits https://i.imgur.com/a/asdfxcv to asdfxcv
+            // or splits https://i.imgur.com/a/asdfxcv.gifv to asdfxcv
+
+            const fetchAlbum = async id => {
+                console.log('requesting from singlepost', id);
+                try {
                     const {data} = await axios.get(`/image/${id}`);
-                    setAlbumPics(data.data.images);
-                }
-
-                fetchAlbum(album_id);
-            } else {
-                // if image_info.variants is not empty and contains the property 'gif', use the highest quality gif as the source instead
-                if (!(Object.entries(image_info.variants).length === 0 && image_info.variants.constructor === Object)) {
-                    if (image_info.variants.hasOwnProperty('gif')) {
-                        if (image_info.variants.gif.hasOwnProperty('source')) {
-                            image_src = image_info.variants.gif.source.url;
-                        } else {
-                            const resolution_array = image_info.variants.gif.resolutions;
-                            image_src = resolution_array[resolution_array.length - 1].url;
-                        }
-                    } 
-                }
-
-                const downloadImage = new Image();
-                downloadImage.onload = function() {
-                    try {
-                        document.querySelector('.image-container').src = this.src;
-                    } catch(e) {
-                        console.log(e) //todo
+                    if (data.type === 'album') {
+                        setAlbumPics(data.data.data.images);
+                    } else {
+                        setIsAlbum(false);
+                        console.log('is a pic')
+                        showImage(data.data.data.link)
                     }
-                }
-
-                downloadImage.src = image_src;
-
-                setImageSource(image_src);
+                } catch(e) {
+                    console.log(e);
+                    setIsAlbum(false);
                 }
             }
+            
+            fetchAlbum(album_id);
+        } else {
+            // if image_info.variants is not empty and contains the property 'gif', use the highest quality gif as the source instead
+            if (!(Object.entries(image_info.variants).length === 0 && image_info.variants.constructor === Object)) {
+                if (image_info.variants.hasOwnProperty('gif')) {
+                    if (image_info.variants.gif.hasOwnProperty('source')) {
+                        image_src = image_info.variants.gif.source.url;
+                    } else {
+                        const resolution_array = image_info.variants.gif.resolutions;
+                        image_src = resolution_array[resolution_array.length - 1].url;
+                    }
+                } 
+            }
+            showImage(image_src);
+        }
+            
         return () => {
             setImageSource(null);
             setAlbumPics([])
@@ -95,10 +118,10 @@ function SinglePost({data, ...props}) {
                 <div className="post-image">
                     {isAlbum ? 
                     <Carousel>
-                        {albumPics.map(pic => <img src={`https://i.imgur.com/${pic.id}h.jpg`} key={pic.id} alt={`Album ${pic.description}`}/>)}
+                        {albumPics.map(pic => <a href={data.url} target="_blank" rel="noopener noreferrer" key={pic.id}><img src={`https://i.imgur.com/${pic.id}h.jpg`} alt={`Album ${pic.description}`}/></a>)}
                     </Carousel>
                     :
-                    <img src={LoadingGif} alt={data.imageSource} className="image-container"/>
+                    <a href={imageSource} target="_blank" rel="noopener noreferrer"><img src={LoadingGif} alt={data.title} className="image-container"/></a>
                     }
                 </div>
                 <div className="post-information">

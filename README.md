@@ -19,7 +19,7 @@ Used to learn how to handle OAuth2, APIs and React Hooks.
 6. [Imgur API Docs](https://apidocs.imgur.com/?version=latest#intro)
 
 ### To add
-- Able to view image albums
 - Hover on image should show information
 - Better responsive behavior for single post on mobile
 - Refresh token things
+- How to display disproportionate images (really tall/wide images)
