@@ -9,10 +9,26 @@ router.get('/:id', async (req, res) => {
     console.log(id);
     const headers = {'Authorization': `Client-ID ${process.env.IMGUR_CLIENT_ID}`};
     try {
-        const {data} = await axios.get(`https://api.imgur.com/3/album/${id}`, {headers});
-        return res.json(data);
+        const response = await axios.get(`https://api.imgur.com/3/album/${id}`, {headers});
+        // if this passes, we know that the id we requested is an album. If not, we try again with image
+        console.log({
+            'user remaining': response.headers['x-ratelimit-userremaining'], 
+            'client remaining': response.headers['x-ratelimit-clientremaining']})
+        
+        return res.json({type:"album", data: response.data});
     } catch(e) {
-        console.log(e);
+        try {
+            const response = await axios.get(`https://api.imgur.com/3/image/${id}`, {headers});
+            console.log({
+                'user remaining': response.headers['x-ratelimit-userremaining'], 
+                'client remaining': response.headers['x-ratelimit-clientremaining']})
+            return res.json({type:"image", data: response.data});
+        } catch (e) {
+            return res.json({
+                status: 'failed',
+                error: e
+            })
+        }
     }
 
     
