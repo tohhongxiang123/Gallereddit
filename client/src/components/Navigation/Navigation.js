@@ -12,6 +12,7 @@ function Navigation(props) {
     const [subreddit, setSubreddit] = useContext(SubredditContext);
     const [searchText, setSearchText] = useState(''); 
     const [menuIcon, setMenuIcon] = useState('menu');
+    const currentSubreddit = props.location.pathname.split('/')[props.location.pathname.split('/').length - 1];
 
     // get user info
     useEffect(() => {
@@ -44,6 +45,10 @@ function Navigation(props) {
             }
         }
       }, [user]);
+
+    useEffect(() => {
+        setSubreddit(currentSubreddit)
+    }, [setSubreddit, currentSubreddit]);
 
     const logout = async () => {
         try {
