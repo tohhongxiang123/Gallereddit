@@ -21,5 +21,5 @@ Used to learn how to handle OAuth2, APIs and React Hooks.
 ### To add
 - Hover on image should show information
 - Better responsive behavior for single post on mobile
-- Refresh token things
 - How to display disproportionate images (really tall/wide images)
+- Sort by hot/top/controversial by time
