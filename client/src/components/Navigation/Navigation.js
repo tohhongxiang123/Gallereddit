@@ -13,6 +13,7 @@ function Navigation(props) {
     const [searchText, setSearchText] = useState(''); 
     const [menuIcon, setMenuIcon] = useState('menu');
 
+    // get user info
     useEffect(() => {
         axios.get('/user/info').then(response => {
             const data = response.data;
@@ -22,6 +23,27 @@ function Navigation(props) {
             console.log(`Unable to get user information, ${status}: ${error}`);
         });
     }, [setUser]);
+
+    // set up refresh token thing
+    // refresh tokens expire every hour, so we refresh every 59 minutes
+    useEffect(() => {
+        if (user) {
+            console.log('Initiate refresh timer countdown');
+            const intervalId = setInterval(async () => {
+                try {
+                    const response = await axios.get('/user/refresh_token');
+                    console.log(response.data);
+                } catch(e) {
+                    console.log(e.response);
+                }
+            }, 1000*60*59);
+    
+            return () => {
+                console.log('Stopping refresh timer countdown');
+                clearInterval(intervalId);
+            }
+        }
+      }, [user]);
 
     const logout = async () => {
         try {
