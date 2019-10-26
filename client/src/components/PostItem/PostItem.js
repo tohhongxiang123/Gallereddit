@@ -48,7 +48,7 @@ export default function PostItem({preview, url, ...props}) {
         }
 
         setImageSrc(image_src);
-    }, []) // destructuring these stuff out of props rather than using props, because if *any* prop changes, this entire effect reruns
+    }, []) 
     
     return (
         <div className={`${postItemStyles.postContainer} post-container`} onClick={props.handleClick} data-index={props.name}>
