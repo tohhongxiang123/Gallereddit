@@ -190,6 +190,7 @@ function FrontPage(props) {
     // upvoting a post
     async function toggleUpvote(name) {
         const upvoted = posts.filter(post => post.data.name === name)[0].data.likes;
+        setIsError(null);
         try {
             if (!upvoted) {
                 await axios.get(`/post/upvote/${name}/1`); // upvote the post
@@ -216,11 +217,12 @@ function FrontPage(props) {
     // saving a post
     async function toggleSave(id) {
         const saved = currentPost.data.saved
+        setIsError(null);
         try {
             if (!saved) {
                 await axios.get(`/post/save/${id}`); // save the post
             } else {
-                await axios.get(`/post/unsave/${id}`); // unsave the post
+                await axios.delete(`/post/save/${id}`); // unsave the post
             }
             // update the save status
             const copy_of_currentPost = {...currentPost}

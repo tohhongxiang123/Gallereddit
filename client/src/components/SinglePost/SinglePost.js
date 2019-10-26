@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import './SinglePost.css';
+import singlePostStyles from './SinglePost.module.css';
 import LoadingGif from '../../assets/loading.gif';
 import axios from 'axios'
 import Carousel from '../Carousel/Carousel'
@@ -16,7 +16,7 @@ function SinglePost({data, ...props}) {
         const downloadImage = new Image();
         downloadImage.onload = function() {
             try {
-                document.querySelector('.image-container').src = this.src;
+                document.querySelector(`.postImage`).src = this.src;
                 // sometimes when the user clicks away, it closes the image container, then .image-container becomes null
             } catch(e) {
                 console.log(e) //todo
@@ -100,48 +100,50 @@ function SinglePost({data, ...props}) {
             }
             showImage(image_src);
         }
-            
-        return () => {
-            setImageSource(null);
-            setAlbumPics([])
-        }
     }, [data]);
 
     const togglePostActions = () => {
-        document.querySelector('.post-actions').classList.toggle('active');
+        document.querySelector('.postActions').classList.toggle('active');
     }
 
     return (
         <>
         {data ? (
             <div className={props.className}>
-                <div className="post-image">
+                <div className={singlePostStyles.postImageContainer}>
                     {isAlbum ? 
                     <Carousel>
-                        {albumPics.map(pic => <a href={data.url} target="_blank" rel="noopener noreferrer" key={pic.id}><img src={`https://i.imgur.com/${pic.id}h.jpg`} alt={`Album ${pic.description}`}/></a>)}
+                        {albumPics.map(pic => 
+                            <a href={data.url} target="_blank" rel="noopener noreferrer" key={pic.id} className={`${singlePostStyles.postImage} postImage`}>
+                                <img src={`https://i.imgur.com/${pic.id}h.jpg`} alt={`Album ${pic.description}`}/>
+                            </a>)}
                     </Carousel>
                     :
-                    <a href={imageSource} target="_blank" rel="noopener noreferrer"><img src={LoadingGif} alt={data.title} className="image-container"/></a>
+                    <a href={imageSource} target="_blank" rel="noopener noreferrer" className={singlePostStyles.postImage}>
+                        <img src={imageSource ? imageSource : LoadingGif} alt={data.title} className={`${singlePostStyles.postImage} postImage`} />
+                    </a>
                     }
+                    <div className={singlePostStyles.closeTheWindow} onClick={props.handleClick}></div>
                 </div>
-                <div className="post-information">
+                <div className={singlePostStyles.postInformation}>
                     <div className="btn" onClick={props.previousPost}>{`<`}</div>
-                    <div className="post-actions-container">
-                        <div className="post-actions">
-                            <div onClick={props.handleClick} className="close-btn btn">Close</div>
+                    <div className={singlePostStyles.postActionsContainer}>
+                        <div className={`${singlePostStyles.postActions} postActions`}>
+                            <div onClick={props.handleClick} className={`${singlePostStyles.closeBtn} btn`}>Close</div>
                             <div className="btn" onClick={props.toggleUpvote}>{!data.likes ? 'Upvote' : 'Upvoted'}</div> 
                             <div className="btn" onClick={props.toggleSave}>{!data.saved ? 'Save' : 'Unsave'}</div>
                         </div>
-                        <div className="post-action-expand-btn btn" onClick={togglePostActions}>
+                        <div className={`${singlePostStyles.postActionExpandBtn} btn`} onClick={togglePostActions}>
                             ...
                         </div>
                     </div>
                     
-                    <h2 className="post-title"><a target="_blank" rel="noopener noreferrer" href={`https://www.reddit.com${data.permalink}`}>{title}</a></h2>
-                    <a className="post-subreddit" target="_blank" rel="noopener noreferrer" href={`https://www.reddit.com/r/${data.subreddit}`}>r/{data.subreddit}</a>
+                    <h2 className={singlePostStyles.postTitle}><a target="_blank" rel="noopener noreferrer" href={`https://www.reddit.com${data.permalink}`}>{title}</a></h2>
+                    <a className={singlePostStyles.postSubreddit} target="_blank" rel="noopener noreferrer" href={`https://www.reddit.com/r/${data.subreddit}`}>r/{data.subreddit}</a>
                     {props.error && <p>{props.error}</p>}
                     <div className="btn" onClick={props.nextPost}>{`>`}</div>
                 </div>
+                
             </div>
         ) : ( <p>Loading</p>)}
         </>
