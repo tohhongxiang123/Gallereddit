@@ -3,31 +3,44 @@ const router = express.Router();
 const useToken = require('../middleware/useToken');
 const axios = require('axios');
 const uuidv4 = require('uuid/v4');
-const cors = require('cors')
+const cors = require('cors');
+require('dotenv').config();
+
+// auth string to be base64 encoded
+const AUTH_STRING = Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64');
+const USER_HEADERS = {'Authorization': `Basic ${AUTH_STRING}`};
+
+const getUserListing = async ({listing, username, limit, after, access_token}) => {
+    if (!access_token) {
+        console.log('no access');
+        return res.status(403).json({
+            status: 403,
+            error: 'Please log in to continue'
+        })
+    }
+
+    response = await axios.get(`https://oauth.reddit.com/user/${username}/${listing}.json?raw_json=1&limit=${limit}&after=${after}&show=all`, 
+    {headers: {'Authorization': `bearer ${access_token}`}});
+
+    return response;
+}
 
 // login
 router.get('/login', cors() ,async (req, res) => {
     const random_string = uuidv4();
     console.log(process.env.CLIENT_ID, random_string, process.env.URI);
     const url = `https://www.reddit.com/api/v1/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&state=${random_string}&redirect_uri=${process.env.URI}&duration=permanent&scope=identity history vote read save`;
-    // return res.status(302).redirect(`https://www.reddit.com/api/v1/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&state=${random_string}&redirect_uri=${process.env.URI}&duration=permanent&scope=identity history vote read save`);
     return res.json({url});
 })
 
 // get access token
 router.post('/access_token/:code', async (req, res) => {
     const code = req.params.code;
-    // auth string has to be base64 encoded
-    const auth_string = Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64');
-
-    const headers = {
-        'Authorization': `Basic ${auth_string}`
-    }
 
     const body = `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.URI}`;
     
     try {
-        const response = await axios.post('https://www.reddit.com/api/v1/access_token', body, {headers});
+        const response = await axios.post('https://www.reddit.com/api/v1/access_token', body, {headers: USER_HEADERS});
 
         console.log(response.data);
         const {access_token, refresh_token} = response.data;
@@ -40,22 +53,23 @@ router.post('/access_token/:code', async (req, res) => {
 })
 
 // refresh access token
-router.post('/refresh_token/:code', async (req, res) => {
-    const code = req.params.code;
-    const auth_string = Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64');
-
-    const headers = {
-        'Authorization': `Basic ${auth_string}`
-    }
-
-    const body = `grant_type=refresh_token&refresh_token=${code}`
+router.get('/refresh_token', async (req, res) => {
+    const refreshToken = req.cookies['refresh_token'];
+    const body = `grant_type=refresh_token&refresh_token=${refreshToken}`;
 
     try {
-        const response = await axios.post('https://www.reddit.com/api/v1/access_token', body, {headers});
-        const data = response.data;
-        const refresh_token = data
+        const response = await axios.post('https://www.reddit.com/api/v1/access_token', body, {headers: USER_HEADERS});
+        const accessToken = response.data.access_token;
+
+        return res.cookie('access_token', accessToken).json({status:'200', message:'Refreshed user token'});
     } catch(e) {
-        console.log(e)
+        console.log(e);
+        const {status, statusText} = e.response;
+
+        return res.status(status).json({
+            status,
+            error: statusText
+        });
     }
 })
 
@@ -78,20 +92,7 @@ router.post('/:username/upvoted', useToken, async (req, res) => {
     const {limit, after} = req.body;
     try {
         const {access_token} = req.cookies;
-        let response;
-        if (access_token) {
-            // user currently logged in
-            response = await axios.get(`https://oauth.reddit.com/user/${username}/upvoted.json?raw_json=1&limit=${limit}&after=${after}&show=all`, 
-            {headers: {'Authorization': `bearer ${access_token}`}});
-        } else {
-            // user not logged in
-            return res.status(403).json({
-                status: 403,
-                error: 'Please log in to continue'
-            })
-        }
-
-        const data = response.data;
+        const {data} = await getUserListing({listing: 'upvoted', username, limit, after, access_token});
 
         return res.json(data);
     } catch(e) {
@@ -111,45 +112,26 @@ router.post('/:username/saved', useToken, async (req, res) => {
     const {limit, after} = req.body;
     try {
         const {access_token} = req.cookies;
-        let response;
-        if (access_token) {
-            // user currently logged in
-            response = await axios.get(`https://oauth.reddit.com/user/${username}/saved.json?raw_json=1&limit=${limit}&after=${after}&show=all`, 
-            {headers: {'Authorization': `bearer ${access_token}`}});
-        } else {
-            // user not logged in
-            return res.status(403).json({
-                status: 403,
-                error: 'Please log in to continue'
-            })
-        }
-
-        const data = response.data;
+        const {data} = await getUserListing({listing: 'saved', username, limit, after, access_token});
 
         return res.json(data);
     } catch(e) {
-        console.log(e);
         const {status, statusText} = e.response;
 
         return res.status(status).json({
             status,
-            error: statusText
+            error: statusText,
+            details: e
         });
     }
 })
 
 // log out user
 router.get('/logout', async (req, res) => {
-    const auth_string = Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64');
-
-    const headers = {
-        'Authorization': `Basic ${auth_string}`
-    }
-
     const body = `token=${req.cookies['access_token']}&token_type_hint=ACCESS_TOKEN`
 
     try {
-        const response = await axios.post(`https://www.reddit.com/api/v1/revoke_token`, body, {headers});
+        const response = await axios.post(`https://www.reddit.com/api/v1/revoke_token`, body, {headers: USER_HEADERS});
         console.log(response.data);
     } catch(e) {
         console.log(e.response);

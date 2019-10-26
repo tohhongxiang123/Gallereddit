@@ -1,28 +1,28 @@
-.single-post-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-.post-image {
+.postImageContainer {
     height: 100vh;
-    width: 100%;
+    margin:0 auto;
     background-color: rgba(0,0,0,0.7);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
 }
 
-.post-image img {
+.postImageContainer img {
     max-height: 100vh;
     max-width: 100%;
     margin: 0 auto;
 }
 
-.post-information {
+.postImage {
+    z-index: 1;
+}
+
+.postInformation {
     position: fixed;
     bottom: 0;
     display: grid;
@@ -34,21 +34,22 @@
     background: rgb(47,47,47);
     background: linear-gradient(0deg, rgba(47,47,47,1) 0%, rgba(255,255,255,0) 100%);
     color: #F0F0F0;
+    z-index: 1;
 }
 
-.post-information a {
+.postInformation a {
     text-decoration: none;
     color: inherit;
 }
 
-.post-actions-container {
+.postActionsContainer {
     display: grid;
     grid-template-columns: 1fr;
     grid-auto-flow: row;
     position: relative;
 }
 
-.post-actions {
+.postActions {
     display: none;
     position:absolute;
     bottom: 3em;
@@ -56,19 +57,19 @@
     width: 100%;
 }
 
-.post-actions > * {
+.postActions > * {
     background-color: #2F2F2F80;
 }
 
-.post-information a:hover {
+.postInformation a:hover {
     text-decoration: underline;
 }
 
-.post-title {
+.postTitle {
     display: none;
 }
 
-.post-title, .post-subreddit {
+.postTitle, .postSubreddit {
     max-width: 300px;
     white-space: pre;
     text-overflow: ellipsis;
@@ -76,34 +77,44 @@
     padding: 0 1em;
 }
 
-.post-information ul {
+.postInformation ul {
     list-style: none;
 }
 
-.close-btn {
+.closeBtn {
     justify-self: stretch;
 }
 
+.closeTheWindow {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
 @media screen and (min-width: 768px) {
-    .post-actions {
+    .postActions {
         grid-auto-flow: column;
         position: static;
         display: grid;
     }
 
-    .post-actions > * {
+    .postActions > * {
         background-color: transparent;
     }
 
-    .post-action-expand-btn {
+    .postActionExpandBtn {
         display: none;
     }
 
-    .post-actions-container {
+    .postActionContainer {
         grid-template-columns: auto auto;
     }
 
-    .post-title {
+    .postTitle {
         display: block;
     }
 }
