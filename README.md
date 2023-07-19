@@ -37,6 +37,8 @@ cd ..
 ```
 
 3. Copy `.env.example` to `.env` and fill in details
+    - Get Reddit client ID and secret: [link](https://www.reddit.com/r/redditdev/comments/hasnnc/where_do_i_find_the_reddit_client_id_and_secret/)
+    - Get Imgur client ID: [link](https://api.imgur.com/)
 
 4. Run locally
 
